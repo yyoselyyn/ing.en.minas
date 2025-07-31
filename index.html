@@ -3,129 +3,148 @@
 <head>
   <meta charset="UTF-8">
   <title>Malla Interactiva - Ingeniería en Minas</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500&display=swap" rel="stylesheet">
   <style>
     body {
-      font-family: sans-serif;
-      background: #e8dfd5;
+      font-family: 'Playfair Display', serif;
+      background: #fdf4f0;
       margin: 0;
       padding: 20px;
     }
     h1 {
       text-align: center;
-      color: #3a3a3a;
+      color: #5a1e1e;
+      font-size: 2.5em;
+      margin-bottom: 10px;
     }
-    .contenedor {
+    h2 {
+      color: #7a2727;
+      border-bottom: 2px solid #7a2727;
+      padding-bottom: 5px;
+      margin-top: 40px;
+    }
+    h3 {
+      color: #a04040;
+      margin: 10px 0;
+    }
+    .anio {
+      margin-bottom: 30px;
+    }
+    .cuatri {
       display: flex;
+      flex-wrap: wrap;
       gap: 10px;
-      overflow-x: auto;
-      padding: 20px;
-    }
-    .columna {
-      flex: 0 0 auto;
-      min-width: 180px;
-      background: #f1eae0;
-      border-radius: 10px;
-      padding: 10px;
-    }
-    .columna h2 {
-      text-align: center;
-      font-size: 1em;
-      color: #4a4a4a;
+      padding-left: 10px;
     }
     .materia {
-      background: #d9d9c9;
-      border-radius: 20px;
-      margin: 6px 0;
-      padding: 10px;
-      text-align: center;
+      background: #ffe5e5;
+      border-left: 5px solid #a04040;
+      border-radius: 10px;
+      padding: 10px 15px;
+      min-width: 200px;
+      box-shadow: 2px 2px 6px rgba(0,0,0,0.1);
+      transition: 0.3s;
       cursor: pointer;
-      font-size: 0.9em;
-      transition: background 0.3s, transform 0.2s;
     }
     .materia:hover {
-      transform: scale(1.02);
+      background: #f9d0d0;
     }
     .aprobada {
-      background: #b4e1b4;
+      background: #e3f9e3;
       text-decoration: line-through;
+      border-left-color: green;
     }
     .desbloqueada {
-      background: #fff2aa;
+      background: #fff2cc;
+      border-left-color: #cc9e1f;
     }
     .bloqueada {
-      background: #cccccc;
+      background: #ccc;
+      color: #444;
       opacity: 0.6;
+      border-left-color: #777;
       cursor: not-allowed;
     }
     .boton-reiniciar {
-      margin: 20px auto;
-      display: block;
-      padding: 10px 20px;
-      background: #a67c52;
+      background: #7a2727;
       color: white;
       border: none;
-      border-radius: 10px;
+      border-radius: 8px;
+      padding: 10px 20px;
       cursor: pointer;
+      display: block;
+      margin: 20px auto;
     }
   </style>
 </head>
 <body>
 
-<h1>Malla Curricular - Ingeniería en Minas</h1>
+<h1>⛏️ Malla Curricular - Ingeniería en Minas</h1>
 <button class="boton-reiniciar" onclick="reiniciarProgreso()">Reiniciar progreso</button>
-<div class="contenedor" id="malla"></div>
+<div id="malla"></div>
 
 <script>
   const materias = [
-    { nombre: "Álgebra I", id: "algebra1", columna: "1A", requisitos: [] },
-    { nombre: "Cálculo I", id: "calculo1", columna: "1A", requisitos: [] },
-    { nombre: "Fund. de la Programación", id: "fund_prog", columna: "1A", requisitos: [] },
-    { nombre: "Intro a la Ingeniería", id: "intro", columna: "1A", requisitos: [] },
-    { nombre: "Química", id: "quimica", columna: "1B", requisitos: [] },
-    { nombre: "Álgebra II", id: "algebra2", columna: "1B", requisitos: ["algebra1"] },
-    { nombre: "Física I", id: "fisica1", columna: "1B", requisitos: ["calculo1"] },
-    { nombre: "Inglés", id: "ingles", columna: "2A", requisitos: [] },
-    { nombre: "Cálculo II", id: "calculo2", columna: "2A", requisitos: ["calculo1"] },
-    { nombre: "Física II", id: "fisica2", columna: "2A", requisitos: ["fisica1"] },
-    { nombre: "Sist. de Representación", id: "sist_repr", columna: "2A", requisitos: ["algebra1"] },
-    { nombre: "Geo. para Ingeniería", id: "geo", columna: "2B", requisitos: ["intro"] },
-    { nombre: "Estática y Resist. Mat.", id: "estatica", columna: "2B", requisitos: ["calculo1", "fisica1"] },
-    { nombre: "Electrotecnia", id: "electro", columna: "2B", requisitos: ["fisica1", "fisica2"] },
-    { nombre: "Química Analítica", id: "quimica_a", columna: "2B", requisitos: ["quimica"] },
-    { nombre: "Mec. Aplicada Minera", id: "mec_min", columna: "3A", requisitos: ["algebra2", "estatica"] },
-    { nombre: "Prob. y Estadística", id: "estadistica", columna: "3A", requisitos: ["calculo2"] },
-    { nombre: "Mineralogía", id: "mineralogia", columna: "3A", requisitos: ["geo"] },
-    { nombre: "Construcciones", id: "construcciones", columna: "3A", requisitos: ["estatica"] },
-    { nombre: "Mecánica de Rocas", id: "mec_rocas", columna: "3A", requisitos: ["geo", "estatica"] },
-    { nombre: "Tratamiento Min. I", id: "trat1", columna: "3B", requisitos: ["quimica_a", "mineralogia", "mec_min"] },
-    { nombre: "Mod. Matemáticos", id: "modelos", columna: "3B", requisitos: ["algebra2", "calculo2"] },
-    { nombre: "Geoestadística", id: "geoestad", columna: "3B", requisitos: ["geo", "estadistica"] },
-    { nombre: "Tec. de Explosivos", id: "explosivos", columna: "3B", requisitos: ["mec_rocas"] },
-    { nombre: "Fund. de Laboreo", id: "laboreo", columna: "3B", requisitos: ["mec_rocas"] },
-    { nombre: "Simulación Minera", id: "simulacion", columna: "4A", requisitos: ["fund_prog", "estadistica", "laboreo"] },
-    { nombre: "Software Minero", id: "software", columna: "4A", requisitos: ["fund_prog", "laboreo"] },
-    { nombre: "Máquinas y Servicios", id: "maquinas", columna: "4A", requisitos: ["mec_min", "laboreo"] },
-    { nombre: "Tratamiento Min. II", id: "trat2", columna: "4A", requisitos: ["trat1"] },
-    { nombre: "Petrografía", id: "petrografia", columna: "4A", requisitos: ["mineralogia"] },
-    { nombre: "Perforaciones", id: "perforaciones", columna: "4B", requisitos: ["mec_rocas", "explosivos"] },
-    { nombre: "Medio Ambiente", id: "medioamb", columna: "4B", requisitos: ["laboreo", "trat1"] },
-    { nombre: "Exploración y Eval.", id: "exploracion", columna: "4B", requisitos: ["geoestad", "petrografia", "software"] },
-    { nombre: "Eval. Económica", id: "evaleco", columna: "4B", requisitos: ["estadistica", "modelos"] },
-    { nombre: "Topografía", id: "topografia", columna: "4B", requisitos: ["sist_repr", "laboreo"] },
-    { nombre: "Seguridad y Salud", id: "seguridad", columna: "5A", requisitos: ["medioamb"] },
-    { nombre: "Diseño de Plantas", id: "plantas", columna: "5A", requisitos: ["trat2"] },
-    { nombre: "Legislación Minera", id: "legislacion", columna: "5A", requisitos: ["topografia"] },
-    { nombre: "Proyecto Minero", id: "proyecto", columna: "5A", requisitos: ["software", "evaleco"] },
-    { nombre: "Metalurgia Ext.", id: "metalurgia", columna: "5A", requisitos: ["trat2"] },
-    { nombre: "Responsabilidad Soc.", id: "rsocial", columna: "5B", requisitos: ["legislacion"] },
-    { nombre: "Gestión Organizacional", id: "gestion", columna: "5B", requisitos: ["seguridad"] },
-    { nombre: "Ing. en Excavaciones", id: "excavaciones", columna: "5B", requisitos: ["explosivos", "maquinas", "proyecto"] },
-    { nombre: "Proyecto Metalúrgico", id: "metalurgico", columna: "5B", requisitos: ["plantas", "proyecto"] },
-    { nombre: "TIF", id: "tif", columna: "5B", requisitos: ["proyecto"] },
-    { nombre: "Fund. de Admin. y Gestión", id: "admgestion", columna: "5B", requisitos: ["evaleco"] }
+    { nombre: "Álgebra I", id: "algebra1", grupo: "1A", requisitos: [] },
+    { nombre: "Cálculo I", id: "calculo1", grupo: "1A", requisitos: [] },
+    { nombre: "Fund. de la Programación", id: "fund_prog", grupo: "1A", requisitos: [] },
+    { nombre: "Intro a la Ingeniería", id: "intro", grupo: "1A", requisitos: [] },
+    { nombre: "Química", id: "quimica", grupo: "1B", requisitos: [] },
+    { nombre: "Álgebra II", id: "algebra2", grupo: "1B", requisitos: ["algebra1"] },
+    { nombre: "Física I", id: "fisica1", grupo: "1B", requisitos: ["calculo1"] },
+
+    { nombre: "Inglés", id: "ingles", grupo: "2A", requisitos: [] },
+    { nombre: "Cálculo II", id: "calculo2", grupo: "2A", requisitos: ["calculo1"] },
+    { nombre: "Física II", id: "fisica2", grupo: "2A", requisitos: ["fisica1"] },
+    { nombre: "Sist. de Representación", id: "sist_repr", grupo: "2A", requisitos: ["algebra1"] },
+    { nombre: "Geo. para Ingeniería", id: "geo", grupo: "2B", requisitos: ["intro"] },
+    { nombre: "Estática y Resistencia", id: "estatica", grupo: "2B", requisitos: ["calculo1", "fisica1"] },
+    { nombre: "Electrotecnia", id: "electro", grupo: "2B", requisitos: ["fisica1", "fisica2"] },
+    { nombre: "Química Analítica", id: "quimica_a", grupo: "2B", requisitos: ["quimica"] },
+
+    { nombre: "Mec. Aplicada Minera", id: "mec_min", grupo: "3A", requisitos: ["algebra2", "estatica"] },
+    { nombre: "Prob. y Estadística", id: "estadistica", grupo: "3A", requisitos: ["calculo2"] },
+    { nombre: "Mineralogía", id: "mineralogia", grupo: "3A", requisitos: ["geo"] },
+    { nombre: "Construcciones", id: "construcciones", grupo: "3A", requisitos: ["estatica"] },
+    { nombre: "Mecánica de Rocas", id: "mec_rocas", grupo: "3A", requisitos: ["geo", "estatica"] },
+    { nombre: "Tratamiento Min. I", id: "trat1", grupo: "3B", requisitos: ["quimica_a", "mineralogia", "mec_min"] },
+    { nombre: "Mod. Matemáticos", id: "modelos", grupo: "3B", requisitos: ["algebra2", "calculo2"] },
+    { nombre: "Geoestadística", id: "geoestad", grupo: "3B", requisitos: ["geo", "estadistica"] },
+    { nombre: "Tec. de Explosivos", id: "explosivos", grupo: "3B", requisitos: ["mec_rocas"] },
+    { nombre: "Fund. de Laboreo", id: "laboreo", grupo: "3B", requisitos: ["mec_rocas"] },
+
+    { nombre: "Simulación Minera", id: "simulacion", grupo: "4A", requisitos: ["fund_prog", "estadistica", "laboreo"] },
+    { nombre: "Software Minero", id: "software", grupo: "4A", requisitos: ["fund_prog", "laboreo"] },
+    { nombre: "Máquinas y Servicios", id: "maquinas", grupo: "4A", requisitos: ["mec_min", "laboreo"] },
+    { nombre: "Tratamiento Min. II", id: "trat2", grupo: "4A", requisitos: ["trat1"] },
+    { nombre: "Petrografía", id: "petrografia", grupo: "4A", requisitos: ["mineralogia"] },
+    { nombre: "Perforaciones", id: "perforaciones", grupo: "4B", requisitos: ["mec_rocas", "explosivos"] },
+    { nombre: "Medio Ambiente", id: "medioamb", grupo: "4B", requisitos: ["laboreo", "trat1"] },
+    { nombre: "Exploración y Evaluación", id: "exploracion", grupo: "4B", requisitos: ["geoestad", "petrografia", "software"] },
+    { nombre: "Evaluación Económica", id: "evaleco", grupo: "4B", requisitos: ["estadistica", "modelos"] },
+    { nombre: "Topografía", id: "topografia", grupo: "4B", requisitos: ["sist_repr", "laboreo"] },
+
+    { nombre: "Seguridad y Salud", id: "seguridad", grupo: "5A", requisitos: ["medioamb"] },
+    { nombre: "Diseño de Plantas", id: "plantas", grupo: "5A", requisitos: ["trat2"] },
+    { nombre: "Legislación Minera", id: "legislacion", grupo: "5A", requisitos: ["topografia"] },
+    { nombre: "Proyecto Minero", id: "proyecto", grupo: "5A", requisitos: ["software", "evaleco"] },
+    { nombre: "Metalurgia Extractiva", id: "metalurgia", grupo: "5A", requisitos: ["trat2"] },
+    { nombre: "Responsabilidad Social", id: "rsocial", grupo: "5B", requisitos: ["legislacion"] },
+    { nombre: "Gestión Organizacional", id: "gestion", grupo: "5B", requisitos: ["seguridad"] },
+    { nombre: "Ing. en Excavaciones", id: "excavaciones", grupo: "5B", requisitos: ["explosivos", "maquinas", "proyecto"] },
+    { nombre: "Proyecto Metalúrgico", id: "metalurgico", grupo: "5B", requisitos: ["plantas", "proyecto"] },
+    { nombre: "TIF", id: "tif", grupo: "5B", requisitos: ["proyecto"] },
+    { nombre: "Fund. de Admin. y Gestión", id: "admgestion", grupo: "5B", requisitos: ["evaleco"] }
   ];
 
-  const columnas = ["1A", "1B", "2A", "2B", "3A", "3B", "4A", "4B", "5A", "5B"];
+  const grupos = {
+    "1er AÑO": ["1A", "1B"],
+    "2do AÑO": ["2A", "2B"],
+    "3er AÑO": ["3A", "3B"],
+    "4to AÑO": ["4A", "4B"],
+    "5to AÑO": ["5A", "5B"]
+  };
+
   const aprobadas = JSON.parse(localStorage.getItem('materias_aprobadas')) || [];
 
   function guardarProgreso() {
@@ -140,47 +159,51 @@
   function crearMalla() {
     const malla = document.getElementById('malla');
     malla.innerHTML = "";
-    const colMap = {};
 
-    columnas.forEach(col => {
-      const div = document.createElement('div');
-      div.className = "columna";
-      div.innerHTML = `<h2>${col}</h2>`;
-      malla.appendChild(div);
-      colMap[col] = div;
-    });
+    for (const [anio, cuatris] of Object.entries(grupos)) {
+      const seccion = document.createElement('div');
+      seccion.className = "anio";
+      seccion.innerHTML = `<h2>${anio}</h2>`;
+      cuatris.forEach(cuatri => {
+        const cuatriDiv = document.createElement('div');
+        cuatriDiv.innerHTML = `<h3>${cuatri.endsWith("A") ? "Primer Cuatrimestre" : "Segundo Cuatrimestre"}</h3>`;
+        cuatriDiv.classList.add('cuatri');
 
-    materias.forEach(m => {
-      const requisitosOk = m.requisitos.every(r => aprobadas.includes(r));
-      const div = document.createElement('div');
-      div.className = "materia";
-      div.textContent = m.nombre;
+        materias.filter(m => m.grupo === cuatri).forEach(m => {
+          const requisitosOk = m.requisitos.every(r => aprobadas.includes(r));
+          const div = document.createElement('div');
+          div.className = "materia";
+          div.textContent = m.nombre;
 
-      if (aprobadas.includes(m.id)) {
-        div.classList.add('aprobada');
-      } else if (requisitosOk) {
-        div.classList.add('desbloqueada');
-      } else {
-        div.classList.add('bloqueada');
-      }
+          if (aprobadas.includes(m.id)) {
+            div.classList.add('aprobada');
+          } else if (requisitosOk) {
+            div.classList.add('desbloqueada');
+          } else {
+            div.classList.add('bloqueada');
+          }
 
-      div.addEventListener('click', () => {
-        if (div.classList.contains('bloqueada')) return;
+          div.addEventListener('click', () => {
+            if (div.classList.contains('bloqueada')) return;
+            if (aprobadas.includes(m.id)) {
+              aprobadas.splice(aprobadas.indexOf(m.id), 1);
+            } else {
+              aprobadas.push(m.id);
+            }
+            guardarProgreso();
+            crearMalla();
+          });
 
-        if (aprobadas.includes(m.id)) {
-          aprobadas.splice(aprobadas.indexOf(m.id), 1);
-        } else {
-          aprobadas.push(m.id);
-        }
-        guardarProgreso();
-        crearMalla();
+          cuatriDiv.appendChild(div);
+        });
+        seccion.appendChild(cuatriDiv);
       });
-
-      colMap[m.columna].appendChild(div);
-    });
+      malla.appendChild(seccion);
+    }
   }
 
   crearMalla();
 </script>
 </body>
 </html>
+
